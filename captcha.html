@@ -9,7 +9,11 @@
   html, body {
     margin: 0;
     padding: 0;
-    background: transparent;
+    /* Deliberately opaque, not transparent — a transparent WKWebView background makes
+       Cloudflare's challenge iframe render unreliably on iOS (it can silently get stuck
+       mid-render even though the JS callback still fires). A plain white box also matches
+       how most apps present a captcha regardless of their own light/dark theme. */
+    background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,6 +46,14 @@
     function onTurnstileExpired() {
       post({ type: 'expired' });
     }
+    // Belt-and-suspenders: if Cloudflare's script never finishes loading/rendering at all
+    // (network hiccup, the widget script blocked, etc.), don't leave the app waiting forever
+    // on a blank box — report a failure after a timeout so it can offer a retry.
+    setTimeout(function () {
+      if (!document.querySelector('.cf-turnstile iframe')) {
+        post({ type: 'error' });
+      }
+    }, 10000);
   </script>
 </body>
 </html>
