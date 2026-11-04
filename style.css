@@ -111,3 +111,18 @@ footer.site {
   color: var(--text-secondary);
   font-size: 13.5px;
 }
+
+/* Small trademark mark after the wordmark. */
+.tm {
+  font-size: 0.45em;
+  font-weight: 600;
+  vertical-align: super;
+  margin-left: 1px;
+  line-height: 0;
+}
+
+footer.site .legal-notice {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+}
